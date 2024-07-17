@@ -96,7 +96,19 @@ Ce script génère pour chaque zone de la grille un rectangle situé à peu prè
 
 ### 4-CalculBBOXNomRues.sql
 
-Ce script génère pour chaque zone de la grille et chaque troncon de route de cette zone un rectangle situé à peu près au niveau de son centroïde et qui servira d'annotation pour le nom de la rue. Quand ce nom comporte plusieurs mots, un rectangle est généré pour chaque mot (à condition que le troncon de route soit assez long pour contenir le libellé complet). Les résultats sont stockés dans la table annotationrue qui est générée par le script, dans le schéma "travail". Les rectangles générés ont une taille prévue pour un affichage au 1:1250 avec des noms de communes affichés en police Palace Script MT taille 45. Pour la modifier, il faut changer les valeurs des variables "char_width" et "text_height".
+Ce script génère pour chaque zone de la grille et chaque troncon de route de cette zone un rectangle situé à peu près au niveau de son centroïde et qui servira d'annotation pour le nom de la rue. Quand ce nom comporte plusieurs mots, un rectangle est généré pour chaque mot (à condition que le troncon de route soit assez long pour contenir le libellé complet). Les résultats sont stockés dans la table annotationrue qui est générée par le script, dans le schéma "travail". Les rectangles générés ont une taille prévue pour un affichage au 1:1250 avec des noms de rues affichés en police Palace Script MT taille 30. Pour la modifier, il faut changer les valeurs des variables "char_width" et "text_height".
+
+### 5-CalculBBOXNomRivieres.sql
+
+Ce script génère pour chaque zone de la grille et chaque cours d'eau de cette zone un rectangle situé à peu près au niveau de son centroïde et qui servira d'annotation pour le nom de la rivière. Quand ce nom comporte plusieurs mots, un rectangle est généré pour chaque mot (à condition que le troncon de cours d'eau soit assez long pour contenir le libellé complet). Les résultats sont stockés dans la table annotationriviere qui est générée par le script, dans le schéma "travail". Les rectangles générés ont une taille prévue pour un affichage au 1:1250 avec des noms de rivieres affichés en police Palace Script MT taille 35. Pour la modifier, il faut changer les valeurs des variables "char_width" et "text_height".
+
+### 6-FonctionConversionCoordonnees
+
+Ce script génère une nouvelle fonction destinée à convertir des coordonnées Lambert 93 en coordonnées image. Elle est utile pour le script 7.
+
+### 7-ExportAnnotations.sql
+
+Ce script génère une nouvelle table dans le schéma public, nommée annotations, qui contient toutes les annotations prêtes à exporter. Pour les récupérer au format CSV, ouvrir la table (clic droit , view all data) et cliquer sur le bouton "Save results to file".
 
 ## Préparation et export des cartes au format image
 
