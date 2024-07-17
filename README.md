@@ -88,7 +88,7 @@ A la fin de l'exécution du script, ouvrir un nouveau projet QGIS vide. Aller da
 
 **Qu'est-ce que ça fait?**
 
-Ce script génère pour chaque parcelle un rectangle situé au niveau de son centroïde et qui servira d'annotation pour le numéro de la parcelle. Les rectangles générés ont une taille prévue pour un affichage au 1:1250 avec des numéros de parcelles affichées en police Palace Script MT taille 15. Pour la modifier, il faut changer les valeurs des variables char_width et text_height.
+Ce script génère pour chaque parcelle un rectangle situé au niveau de son centroïde et qui servira d'annotation pour le numéro de la parcelle. Les rectangles générés ont une taille prévue pour un affichage au 1:1250 avec des numéros de parcelles affichées en police Palace Script MT taille 15. Pour la modifier, il faut changer les valeurs des variables "char_width" et "text_height".
 
 **Comment savoir si tout s'est bien passé?** 
 
