@@ -3,6 +3,8 @@ DECLARE
     tbl RECORD;
     i INT;
     j INT;
+    decalage_x INT;
+    decalage_y INT;
     min_x FLOAT;
     min_y FLOAT;
     max_x FLOAT;
@@ -11,11 +13,13 @@ DECLARE
     zone_name TEXT;
 
 BEGIN
-    -- Coordonnées limites de votre zone d'étude (à adapter selon vos données)
-    min_x := (SELECT (ST_XMIN(ST_Union(geom))+5000) FROM travail.feuille);
-    min_y := (SELECT (ST_YMIN(ST_Union(geom))+5000) FROM travail.feuille);
-    max_x := min_x+ 6620; -- 662 pixels * 15 (pour 15 zones de 662pixels)
-    max_y := min_y+ 6620; -- 662 pixels * 15 (pour 15 zones de 662pixels)
+    -- Coordonnées limites de votre zone d'étude (à adapter selon vos données):
+	decalage_x := 5000;
+	decalage_y := 5000;
+    min_x := (SELECT (ST_XMIN(ST_Union(geom))+decalage_x) FROM travail.feuille);
+    min_y := (SELECT (ST_YMIN(ST_Union(geom))+decalage_y) FROM travail.feuille);
+    max_x := min_x+ 6620; -- 662 metres * 10 
+    max_y := min_y+ 6620; -- 662 metres * 10 
 	
 
     -- Création d'une table pour stocker le contour de la zone
