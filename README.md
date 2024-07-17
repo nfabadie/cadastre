@@ -74,9 +74,13 @@ Voici la liste des noms des tables à fournir pour chacun des fichiers, **en res
 
 Sous PgAdmin 4, rafraichir la base "cadastre" et aller s'assurer que les 6 tables de données ont été ajoutées dans le schéma "travail". Puis ouvrir l'interface de requêtes (Menu: Tools/Query Tool) et ouvrir et exécuter les scripts 1 à 7 dans l'ordre croissant de numérotation.
 
-* **1-DecoupageZones.sql**: Ce script génère une grille de 10*10 carrés de 662 mètres de côté. Ces zones serviront de base pour générer les images de cartes à l'échelle 1:1250 de 2000 pixels de côté. Il génère au passage un schéma par zone dans lequel il créer et peuple une copie locale de chacune des tables du schéma "travail" contenant les données de la table d'origine pour la zone concernée.
+### 1-DecoupageZones.sql
 
-Comment savoir si tout s'est bien passé? 
+**Qu'est-ce que ça fait?**
+
+Ce script génère une grille de 10*10 carrés de 662 mètres de côté. Ces zones serviront de base pour générer les images de cartes à l'échelle 1:1250 de 2000 pixels de côté. Il génère au passage un schéma par zone dans lequel il créer et peuple une copie locale de chacune des tables du schéma "travail" contenant les données de la table d'origine pour la zone concernée.
+
+**Comment savoir si tout s'est bien passé?** 
 
 A la fin de l'exécution du script, ouvrir un nouveau projet QGIS vide. Aller dans le menu Couche/Ajouter une couche/Ajouter des couches PostGIS et connectez-vous à la base "cadastre". Dans le schéma travail, sélectionnez les tables parcelle, feuille, localisant, batiment, coursdeau et tronconderoute. Dans le schéma temporary, sélectionnez la table zone_name. Placez "zone_name" en haut de la liste des couches QGIS et vérifiez visuellement si votre grille se superpose bien aux autres couches de données. Sinon, il faut la décaler en modifiant les valeurs des variables "decalage_x" et "decalage_y".
 
