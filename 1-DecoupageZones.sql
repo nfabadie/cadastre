@@ -22,6 +22,13 @@ BEGIN
     DROP TABLE temporary.zone_name;
 	CREATE TABLE temporary.zone_name(id_zone character varying(10), geom geometry(POLYGON, 2154));
 	
+	-- Nettoyage des tables générées
+	DROP TABLE IF EXISTS travail.rueentiere;
+	DROP TABLE IF EXISTS travail.riviere;
+	DROP TABLE IF EXISTS travail.annotationcommune;
+	DROP TABLE IF EXISTS travail.annotationrue;
+	DROP TABLE IF EXISTS travail.annotationriviere;
+	
 	
     -- Boucle pour générer les zones
     FOR i IN 0..9 LOOP
@@ -54,10 +61,11 @@ BEGIN
             LOOP
                 -- Création de la table de sortie
                 EXECUTE 'CREATE TABLE ' || zone_name || '.' || tbl.table_name || ' AS ' ||
-                        'SELECT '|| tbl.table_schema || '.' || tbl.table_name || '.* ' || ', ST_Intersection('|| tbl.table_schema || '.' || tbl.table_name || '.geom ' || ' ,temporary.zone_name.geom) as local_geom '|| 
+                        'SELECT '|| tbl.table_schema || '.' || tbl.table_name || '.* ' || ', ST_Intersection(ST_Force2D('|| tbl.table_schema || '.' || tbl.table_name || '.geom ' || ') ,temporary.zone_name.geom) as local_geom '|| 
 						'FROM ' || tbl.table_schema || '.' || tbl.table_name || ', temporary.zone_name ' || 
-						'WHERE ST_Intersects('|| tbl.table_schema || '.' || tbl.table_name || '.'|| 'geom, temporary.zone_name.geom)' || 
+						'WHERE ST_Intersects(ST_Force2D('|| tbl.table_schema || '.' || tbl.table_name || '.'|| 'geom), temporary.zone_name.geom)' || 
 						'AND temporary.zone_name.id_zone Like '''||zone_name||''';';
+				EXECUTE 'SELECT UpdateGeometrySRID('''|| zone_name ||''', '''|| tbl.table_name ||''', ''local_geom'', 2154);';
             END LOOP;
         END LOOP;
     END LOOP;
