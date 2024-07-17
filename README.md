@@ -112,3 +112,5 @@ Ce script génère une nouvelle table dans le schéma public, nommée annotation
 
 ## Préparation et export des cartes au format image
 
+Ouvrir le projet QGIS CartesSynthetiques. Il devrait charger les données nécessaires et les afficher dans un style proche de celui du cadastre napoléonien. Pour exporter les images de carte correspondant aux zones de la grille, s'assurer d'abord que l'affichage courant est bien au 1:1250. Puis aller dans le menu Extension / Console Python et exécuter le script 8-DecoupageEtExportImagesZones.py.
+
