@@ -29,7 +29,9 @@ Une fois le dossier télécharger et dézippé, on va utiliser les fichiers suiv
 
 Sous PgAdmin 4, créer une base de données vide nommée "cadastre" (préciser l'encodage: UTF-8). Dans l'interface de requêtes (Menu: Tools/Query Tool), entrer et exécuter la commande suivante :
 
-''' CREATE EXTENSION postgis;'''
+```sql
+ CREATE EXTENSION postgis;
+ ```
 
 Sous QGIS, créer un nouveau projet vide et y charger les 6 fichiers *.shp (Menu: Couche/Ajouter une couche/Ajouter une couche vecteur).
 
@@ -57,6 +59,14 @@ Aller dans le menu Base de données / DB Manager. Dans la fenêtre qui s'ouvre, 
 * Ne pas promouvoir en multi-partie: non
 * Convertir les noms de champs en minuscules: oui
 * Créer un index spatial: oui
+
+Voici la liste des noms des tables à fournir pour chacun des fichiers, **en respectant la casse**:
+* parcelle.shp --> parcelle
+* feuille.shp --> feuille
+* localisant.shp --> localisant
+* batiment.shp --> batiment
+* cours_d_eau.shp --> coursdeau
+* troncon_de_route.shp --> tronconderoute
 
 
 ## Génération automatique des zones et des annotations
