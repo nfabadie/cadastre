@@ -88,9 +88,15 @@ A la fin de l'exécution du script, ouvrir un nouveau projet QGIS vide. Aller da
 
 **Qu'est-ce que ça fait?**
 
-Ce script génère pour chaque parcelle un rectangle situé au niveau de son centroïde et qui servira d'annotation pour le numéro de la parcelle. Les rectangles générés ont une taille prévue pour un affichage au 1:1250 avec des numéros de parcelles affichées en police Palace Script MT taille 15. Pour la modifier, il faut changer les valeurs des variables "char_width" et "text_height".
+Ce script génère pour chaque parcelle un rectangle situé au niveau de son centroïde et qui servira d'annotation pour le numéro de la parcelle. Les rectangles générés ont une taille prévue pour un affichage au 1:1250 avec des numéros de parcelles affichés en police Palace Script MT taille 15. Pour la modifier, il faut changer les valeurs des variables "char_width" et "text_height".
 
-**Comment savoir si tout s'est bien passé?** 
+### 3-CalculBBOXNomCommunes.sql
+
+Ce script génère pour chaque zone de la grille un rectangle situé à peu près au niveau de son centroïde et qui servira d'annotation pour le nom de la commune. Quand ce nom comporte plusieurs mots, un rectangle est généré pour chaque mot. Les résultats sont stockés dans la table annotationcommune qui est générée par le script, dans le schéma "travail". Les rectangles générés ont une taille prévue pour un affichage au 1:1250 avec des noms de communes affichés en police Palace Script MT taille 45. Pour la modifier, il faut changer les valeurs des variables "char_width" et "text_height".
+
+### 4-CalculBBOXNomRues.sql
+
+Ce script génère pour chaque zone de la grille et chaque troncon de route de cette zone un rectangle situé à peu près au niveau de son centroïde et qui servira d'annotation pour le nom de la rue. Quand ce nom comporte plusieurs mots, un rectangle est généré pour chaque mot (à condition que le troncon de route soit assez long pour contenir le libellé complet). Les résultats sont stockés dans la table annotationrue qui est générée par le script, dans le schéma "travail". Les rectangles générés ont une taille prévue pour un affichage au 1:1250 avec des noms de communes affichés en police Palace Script MT taille 45. Pour la modifier, il faut changer les valeurs des variables "char_width" et "text_height".
 
 ## Préparation et export des cartes au format image
 
