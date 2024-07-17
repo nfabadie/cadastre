@@ -82,7 +82,15 @@ Ce script génère une grille de 10*10 carrés de 662 mètres de côté. Ces zon
 
 **Comment savoir si tout s'est bien passé?** 
 
-A la fin de l'exécution du script, ouvrir un nouveau projet QGIS vide. Aller dans le menu Couche/Ajouter une couche/Ajouter des couches PostGIS et connectez-vous à la base "cadastre". Dans le schéma travail, sélectionnez les tables parcelle, feuille, localisant, batiment, coursdeau et tronconderoute. Dans le schéma temporary, sélectionnez la table zone_name. Placez "zone_name" en haut de la liste des couches QGIS et vérifiez visuellement si votre grille se superpose bien aux autres couches de données. Sinon, il faut la décaler en modifiant les valeurs des variables "decalage_x" et "decalage_y".
+A la fin de l'exécution du script, ouvrir un nouveau projet QGIS vide. Aller dans le menu Couche/Ajouter une couche/Ajouter des couches PostGIS et connectez-vous à la base "cadastre". Dans le schéma "travail", sélectionner les tables parcelle, feuille, localisant, batiment, coursdeau et tronconderoute. Dans le schéma "temporary", sélectionner la table zone_name. Placer zone_name en haut de la liste des couches QGIS et vérifier visuellement si la grille se superpose bien aux autres couches de données. Si ça n'est pas le cas, il faut la décaler en modifiant les valeurs des variables "decalage_x" et "decalage_y".
+
+### 2-CalculBBOXNumParcelles.sql
+
+**Qu'est-ce que ça fait?**
+
+Ce script génère pour chaque parcelle un rectangle situé au niveau de son centroïde et qui servira d'annotation pour le numéro de la parcelle. Les rectangles générés ont une taille prévue pour un affichage au 1:1250 avec des numéros de parcelles affichées en police Palace Script MT taille 15. Pour la modifier, il faut changer les valeurs des variables char_width et text_height.
+
+**Comment savoir si tout s'est bien passé?** 
 
 ## Préparation et export des cartes au format image
 
