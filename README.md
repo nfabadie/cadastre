@@ -33,6 +33,8 @@ Sous PgAdmin 4, créer une base de données vide nommée "cadastre" (préciser l
  CREATE EXTENSION postgis;
  ```
 
+Puis créer un nouveau schéma nommé "travail" pour y charger les données.
+
 Sous QGIS, créer un nouveau projet vide et y charger les 6 fichiers *.shp (Menu: Couche/Ajouter une couche/Ajouter une couche vecteur).
 
 Puis créer une nouvelle connexion avec la base PostGIS "cadastre": Menu: Couche/Ajouter une couche/Ajouter des couches PostGIS. Puis cliquer sur le bouton "Nouveau" et compléter le formulaire avec les valeurs suivantes:
