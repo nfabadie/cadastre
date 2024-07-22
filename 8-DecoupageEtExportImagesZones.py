@@ -85,3 +85,8 @@ else:
         bbox = feature.geometry().boundingBox()
         id_zone = feature["id_zone"]
         capturer_extrait(bbox, id_zone, taille_px)
+
+
+
+
+    
