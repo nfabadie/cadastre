@@ -3,8 +3,8 @@ DECLARE
     tbl RECORD;
     i INT;
     j INT;
-    decalage_x INT;
-    decalage_y INT;
+	decalage_x INT;
+	decalage_y INT;
     min_x FLOAT;
     min_y FLOAT;
     max_x FLOAT;
