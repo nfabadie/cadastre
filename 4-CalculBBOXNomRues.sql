@@ -4,8 +4,8 @@ RETURNS VOID AS $$
 DECLARE
     record RECORD;
 	mot RECORD;
-    char_width DOUBLE PRECISION := 5 ; -- Approximation de la largeur moyenne d'un caractère en mètres
-    text_height DOUBLE PRECISION := 4.5 ; -- Approximation de la hauteur du texte en mètres
+    char_width DOUBLE PRECISION := 3.3 ; -- Approximation de la largeur moyenne d'un caractère en mètres
+    text_height DOUBLE PRECISION := 3.5 ; -- Approximation de la hauteur du texte en mètres
     text_length INTEGER;
     bbox_width DOUBLE PRECISION;
     bbox_height DOUBLE PRECISION;
@@ -14,7 +14,9 @@ DECLARE
 	segment_end_point GEOMETRY;
 	segment_start_temp GEOMETRY;
 	segment GEOMETRY;
+	segments GEOMETRY[];
 	troncon GEOMETRY;
+	axis GEOMETRY;
 	env GEOMETRY;
 	i INT;
 	j INT;
@@ -45,7 +47,7 @@ END LOOP;
 
  -- Boucle sur chaque point pour calculer le rectangle englobant du texte
     FOR record IN EXECUTE 'SELECT id, text, geom FROM travail.rueentiere WHERE text IS NOT NULL' LOOP
-		text_length := LENGTH(record.text);
+		text_length := char_count(record.text);
 		bbox_width := char_width * text_length;
 		bbox_height := text_height;
 		-- On teste l'orientation de la géométrie
@@ -58,23 +60,34 @@ END LOOP;
        		 segment_start_point := ST_LineInterpolatePoint(troncon, (0.5-(bbox_width / (2*ST_Length(troncon)))));
 			 word_bbox_width := 0;
 			 
-			FOR mot IN SELECT decoupage FROM regexp_split_to_table(record.text, '\s+|-') AS decoupage LOOP
+			FOR mot IN SELECT decoupage FROM regexp_split_to_table(record.text, '\s+') AS decoupage LOOP
 				segment_start_temp := segment_start_point ;
-				word_bbox_width := word_bbox_width + char_width * (1+LENGTH(mot.decoupage));
+				word_bbox_width := word_bbox_width + char_width * (1+char_count(mot.decoupage));
 				segment_end_point := ST_LineInterpolatePoint(troncon, (0.5+(2*word_bbox_width-bbox_width)/ (2*ST_Length(troncon))));
 				segment := ST_MakeLine(segment_start_temp, segment_end_point);
 				env := ST_Buffer(segment, bbox_height, 'endcap=flat join=mitre');
 				INSERT INTO travail.annotationrue(texte_complet, text_part,bbox,cle_origine) VALUES (record.text, mot.decoupage, env, record.id); 
-				segment_start_point := ST_LineInterpolatePoint(troncon, (0.5+(2*(word_bbox_width+char_width)-bbox_width)/ (2*ST_Length(troncon))));
+				segment_start_point := ST_LineInterpolatePoint(troncon, (0.5+(2*(word_bbox_width+char_width/2)-bbox_width)/ (2*ST_Length(troncon))));
+				segments := array_append(segments, segment);
 			END LOOP;
 		
 		END IF;
 		
+		--On complete la table travail.toponymerue
+		axis := ST_MakeLine(segments);
+		IF ST_Distance(ST_StartPoint(troncon),ST_StartPoint(axis)) < ST_Distance(ST_EndPoint(troncon),ST_StartPoint(axis))
+		THEN INSERT INTO travail.toponymerue(texte_complet, cle_origine, geom) VALUES (record.text, record.id, axis); 
+		ELSE INSERT INTO travail.toponymerue(texte_complet, cle_origine, geom) VALUES (record.text, record.id, ST_Reverse(axis)); 
+		END IF;
+		segments := '{}';
 	END LOOP;
  
 END ;
 $$ LANGUAGE plpgsql;
 
+-- Creation d'une table pour stocker les libellés complets et la ligne sur laquelle les afficher
+DROP TABLE IF EXISTS travail.toponymerue;
+CREATE TABLE travail.toponymerue(id serial PRIMARY KEY, texte_complet character varying(150), cle_origine integer, geom geometry(LINESTRING, 2154));
 -- Creation d'une table pour stocker les mots et leurs bbox
 DROP TABLE IF EXISTS travail.annotationrue;
 CREATE TABLE travail.annotationrue(id serial PRIMARY KEY, texte_complet character varying(150), text_part character varying(25), bbox geometry(POLYGON, 2154), cle_origine integer);
