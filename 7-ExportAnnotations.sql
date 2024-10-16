@@ -17,8 +17,8 @@ DECLARE
 	y_rue DOUBLE PRECISION;
 
 BEGIN
-DROP TABLE annotations;  
-CREATE TABLE annotations(id serial PRIMARY KEY, id_zone character varying(10), nature character varying (20), cle_origine integer, texte_complet character varying(150), cle_text_part integer, texte character varying(25), x1_y1 character varying(50), x2_y2 character varying(50), x3_y3 character varying(50), x4_y4 character varying(50));	
+DROP TABLE IF EXISTS annotations;  
+CREATE TABLE annotations(id serial PRIMARY KEY, id_zone character varying(10), nature character varying (20), cle_origine integer, texte_complet character varying(150), cle_text_part integer, texte character varying(50), x1_y1 character varying(50), x2_y2 character varying(50), x3_y3 character varying(50), x4_y4 character varying(50));	
 
 
     -- Boucle pour générer les zones
