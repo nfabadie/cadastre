@@ -14,8 +14,8 @@ DECLARE
 
 BEGIN
     -- Coordonnées limites de votre zone d'étude (à adapter selon vos données):
-	decalage_x := 5000;
-	decalage_y := 5000;
+	decalage_x := 15000;
+	decalage_y := 23000;
     min_x := (SELECT (ST_XMIN(ST_Union(geom))+decalage_x) FROM travail.feuille);
     min_y := (SELECT (ST_YMIN(ST_Union(geom))+decalage_y) FROM travail.feuille);
     max_x := min_x+ 6620; -- 662 metres * 10 
@@ -23,7 +23,7 @@ BEGIN
 	
 
     -- Création d'une table pour stocker le contour de la zone
-    DROP TABLE temporary.zone_name;
+    DROP TABLE IF EXISTS temporary.zone_name;
 	CREATE TABLE temporary.zone_name(id_zone character varying(10), geom geometry(POLYGON, 2154));
 	
 	-- Nettoyage des tables générées
