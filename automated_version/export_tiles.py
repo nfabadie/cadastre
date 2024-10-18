@@ -50,12 +50,14 @@ layers = [
     {"schema": "travail", "table": "parcelle", "geom_name":"geom", "key": "id"},
     {"schema": "travail", "table": "batiment", "geom_name":"geom", "key": "id"},
     {"schema": "travail", "table": "localisant", "geom_name":"bbox", "key": "id"},
-    {"schema": "travail", "table": "coursdeau", "geom_name":"geom", "key": "id"},
     {"schema": "travail", "table": "surfacehydrographique", "geom_name":"geom", "key": "id"},
+    {"schema": "travail", "table": "coursdeau", "geom_name":"geom", "key": "id"},
     {"schema": "temporary", "table": "zone_name", "geom_name":"geom", "key": "id"},
     {"schema": "travail", "table": "annotationriviere", "geom_name":"bbox", "key": "id"},
     {"schema": "travail", "table": "annotationrue", "geom_name":"bbox", "key": "id"},
-    {"schema": "travail", "table": "annotationcommune", "geom_name":"bbox", "key": "id"}
+    {"schema": "travail", "table": "annotationcommune", "geom_name":"bbox", "key": "id"},
+    {"schema": "travail", "table": "toponymeriviere", "geom_name":"geom", "key": "id"},
+     {"schema": "travail", "table": "toponymerue", "geom_name":"geom", "key": "id"}
 ]
 
 # Initialize QGIS application without GUI (headless mode)
