@@ -1,0 +1,22 @@
+[
+    {
+        "LAYER":"BATIMENT",
+        "TABLE":"batiment",
+        "STATUS":"MANDATORY"
+    },
+    {
+        "LAYER":"FEUILLE",
+        "TABLE":"feuille",
+        "STATUS":"MANDATORY"
+    },
+    {
+        "LAYER":"PARCELLE",
+        "TABLE":"parcelle",
+        "STATUS":"MANDATORY"
+    },
+    {
+        "LAYER":"LOCALISANT",
+        "TABLE":"localisant",
+        "STATUS":"MANDATORY"
+    }
+]

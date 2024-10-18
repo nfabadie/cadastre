@@ -3,8 +3,8 @@ CREATE OR REPLACE FUNCTION calculate_parcel_number_bounding_box()
 RETURNS VOID AS $$
 DECLARE
     record RECORD;
-    char_width DOUBLE PRECISION := 3; -- Approximation de la largeur moyenne d'un caractère en mètres
-    text_height DOUBLE PRECISION := 4; -- Approximation de la hauteur du texte en mètres
+    char_width DOUBLE PRECISION := step2_char_width; -- Approximation de la largeur moyenne d'un caractère en mètres
+    text_height DOUBLE PRECISION := step2_text_height; -- Approximation de la hauteur du texte en mètres
     text_length INTEGER;
     bbox_width DOUBLE PRECISION;
     bbox_height DOUBLE PRECISION;

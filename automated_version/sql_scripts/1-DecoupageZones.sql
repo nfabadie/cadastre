@@ -14,10 +14,10 @@ DECLARE
 
 BEGIN
     -- Coordonnées limites de votre zone d'étude (à adapter selon vos données):
-	decalage_x := 15000;
-	decalage_y := 23000;
-    min_x := (SELECT (ST_XMIN(ST_Union(geom))+decalage_x) FROM travail.feuille);
-    min_y := (SELECT (ST_YMIN(ST_Union(geom))+decalage_y) FROM travail.feuille);
+	--decalage_x := step1_decalage_x;
+	--decalage_y := step1_decalage_y;
+    min_x := step1_decalage_x; --(SELECT (ST_XMIN(ST_Union(geom))+decalage_x) FROM travail.feuille);
+    min_y := step1_decalage_y; --(SELECT (ST_YMIN(ST_Union(geom))+decalage_y) FROM travail.feuille);
     max_x := min_x+ 6620; -- 662 metres * 10 
     max_y := min_y+ 6620; -- 662 metres * 10 
 	

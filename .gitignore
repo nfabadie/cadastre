@@ -1,0 +1,13 @@
+data/
+outputs/
+random/
+CartesSynthetiques2.qgz
+automated_version/__pycache__/
+automated_version/launch_process.ipynb
+automated_version/log.txt
+CartesSynthetiques_ex.qgz
+94.qgz
+CartesSynthetiques_tmp.qgz
+.venv/
+.venv_synthmaps/
+.vscode/

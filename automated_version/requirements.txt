@@ -1,0 +1,7 @@
+fsspec
+psycopg2-binary
+pandas
+matplotlib
+shapely
+logging
+PyQt5

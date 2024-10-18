@@ -4,8 +4,8 @@ RETURNS VOID AS $$
 DECLARE
     record RECORD;
 	mot RECORD;
-    char_width DOUBLE PRECISION := 16; -- Approximation de la largeur moyenne d'un caractère en mètres
-    text_height DOUBLE PRECISION := 14; -- Approximation de la hauteur du texte en mètres
+    char_width DOUBLE PRECISION := step3_char_width; -- Approximation de la largeur moyenne d'un caractère en mètres
+    text_height DOUBLE PRECISION := step3_text_height; -- Approximation de la hauteur du texte en mètres
     text_length INTEGER;
     bbox_width DOUBLE PRECISION;
     bbox_height DOUBLE PRECISION;

@@ -4,8 +4,8 @@ RETURNS VOID AS $$
 DECLARE
     record RECORD;
 	mot RECORD;
-    char_width DOUBLE PRECISION := 4.5 ; -- Approximation de la largeur moyenne d'un caractère en mètres
-    text_height DOUBLE PRECISION := 4.5 ; -- Approximation de la hauteur du texte en mètres
+    char_width DOUBLE PRECISION := step4_char_width ; -- Approximation de la largeur moyenne d'un caractère en mètres
+    text_height DOUBLE PRECISION := step4_text_height ; -- Approximation de la hauteur du texte en mètres
     text_length INTEGER;
     bbox_width DOUBLE PRECISION;
     bbox_height DOUBLE PRECISION;
@@ -18,17 +18,15 @@ DECLARE
 	troncon GEOMETRY;
 	axis GEOMETRY;
 	env GEOMETRY;
-	x text;
-	y text;
 	i INT;
 	j INT;
 	zone_name TEXT;
 
 BEGIN
 
---On crée la table des rivieres
-DROP TABLE IF EXISTS travail.riviere;
-CREATE TABLE travail.riviere(id serial, text character varying(100), geom geometry(LINESTRING, 2154));
+--On crée la table des rues
+DROP TABLE IF EXISTS travail.rueentiere;
+CREATE TABLE travail.rueentiere(id serial, text character varying(100), geom geometry(LINESTRING, 2154));
 
 
 -- Boucle sur les zones du découpage
@@ -38,16 +36,17 @@ FOR i IN 0..9 LOOP
 	 -- Nom de la zone (peut être ajusté selon le format souhaité)
             zone_name := 'zone_' || i || '_' || j;
 	
-	  -- Remplissage de la table qui va stocker les bbox des hydronymes
-	     EXECUTE 'INSERT INTO travail.riviere(text, geom) 
-		 SELECT DISTINCT ON (ST_AsText(riv1.local_geom)) riv1.toponyme, ST_Force2D(ST_GeometryN(riv1.local_geom,1)) AS geom
-		 FROM '|| zone_name ||'.coursdeau as riv1 GROUP BY riv1.local_geom, riv1.toponyme ORDER BY ST_AsText(riv1.local_geom), riv1.toponyme;';
-	
-	END LOOP;		 
+	  -- Remplissage de la table qui va stocker les bbox des odonymes
+	     EXECUTE 'INSERT INTO travail.rueentiere(text, geom) 
+		 SELECT DISTINCT '|| zone_name ||'.tronconderoute.nom_ban_g, ST_Force2D(ST_GeometryN(local_geom, 1)) AS geom
+		 FROM '|| zone_name ||'.tronconderoute
+		 WHERE ST_GeometryType(geom) = ''ST_MultiLineString'' GROUP BY nom_ban_g, local_geom;';
+		 
+END LOOP;		 
 END LOOP;
 
  -- Boucle sur chaque point pour calculer le rectangle englobant du texte
-    FOR record IN EXECUTE 'SELECT id, text, geom FROM travail.riviere WHERE text IS NOT NULL' LOOP
+    FOR record IN EXECUTE 'SELECT id, text, geom FROM travail.rueentiere WHERE text IS NOT NULL' LOOP
 		text_length := char_count(record.text);
 		bbox_width := char_width * text_length;
 		bbox_height := text_height;
@@ -67,32 +66,30 @@ END LOOP;
 				segment_end_point := ST_LineInterpolatePoint(troncon, (0.5+(2*word_bbox_width-bbox_width)/ (2*ST_Length(troncon))));
 				segment := ST_MakeLine(segment_start_temp, segment_end_point);
 				env := ST_Buffer(segment, bbox_height, 'endcap=flat join=mitre');
-				INSERT INTO travail.annotationriviere(texte_complet, text_part,bbox,cle_origine) VALUES (record.text, mot.decoupage, env, record.id); 
+				INSERT INTO travail.annotationrue(texte_complet, text_part,bbox,cle_origine) VALUES (record.text, mot.decoupage, env, record.id); 
 				segment_start_point := ST_LineInterpolatePoint(troncon, (0.5+(2*(word_bbox_width+char_width/2)-bbox_width)/ (2*ST_Length(troncon))));
-				segments:= array_append(segments, segment);
+				segments := array_append(segments, segment);
 			END LOOP;
 		
 		END IF;
 		
-		--On complete la table travail.toponymeriviere
+		--On complete la table travail.toponymerue
 		axis := ST_MakeLine(segments);
-		IF (ST_Distance(ST_StartPoint(troncon),ST_StartPoint(axis)) < ST_Distance(ST_EndPoint(troncon),ST_StartPoint(axis)) AND ST_AsText(axis) IS NOT NULL ) 
-		THEN INSERT INTO travail.toponymeriviere(texte_complet, cle_origine, geom) VALUES (record.text, record.id, axis); 
-		ELSE INSERT INTO travail.toponymeriviere(texte_complet, cle_origine, geom) VALUES (record.text, record.id, ST_Reverse(axis)); 
+		IF ST_Distance(ST_StartPoint(troncon),ST_StartPoint(axis)) < ST_Distance(ST_EndPoint(troncon),ST_StartPoint(axis))
+		THEN INSERT INTO travail.toponymerue(texte_complet, cle_origine, geom) VALUES (record.text, record.id, axis); 
+		ELSE INSERT INTO travail.toponymerue(texte_complet, cle_origine, geom) VALUES (record.text, record.id, ST_Reverse(axis)); 
 		END IF;
 		segments := '{}';
-		
 	END LOOP;
  
 END ;
 $$ LANGUAGE plpgsql;
 
-
 -- Creation d'une table pour stocker les libellés complets et la ligne sur laquelle les afficher
-DROP TABLE IF EXISTS travail.toponymeriviere;
-CREATE TABLE travail.toponymeriviere(id serial PRIMARY KEY, texte_complet character varying(150), cle_origine integer, geom geometry(LINESTRING, 2154));
+DROP TABLE IF EXISTS travail.toponymerue;
+CREATE TABLE travail.toponymerue(id serial PRIMARY KEY, texte_complet character varying(150), cle_origine integer, geom geometry(LINESTRING, 2154));
 -- Creation d'une table pour stocker les mots et leurs bbox
-DROP TABLE IF EXISTS travail.annotationriviere;
-CREATE TABLE travail.annotationriviere(id serial PRIMARY KEY, texte_complet character varying(150), text_part character varying(25), bbox geometry(POLYGON, 2154), cle_origine integer);
+DROP TABLE IF EXISTS travail.annotationrue;
+CREATE TABLE travail.annotationrue(id serial PRIMARY KEY, texte_complet character varying(150), text_part character varying(25), bbox geometry(POLYGON, 2154), cle_origine integer);
 -- Exécution de la fonction pour calculer et mettre à jour les rectangles englobants
 SELECT calculate_street_centroid_bounding_box();
