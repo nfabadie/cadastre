@@ -2,21 +2,25 @@
     {
         "LAYER":"BATIMENT",
         "TABLE":"batiment",
-        "STATUS":"MANDATORY"
+        "STATUS":"MANDATORY",
+        "WFS":"CADASTRALPARCELS.PARCELLAIRE_EXPRESS:batiment"
     },
     {
         "LAYER":"FEUILLE",
         "TABLE":"feuille",
-        "STATUS":"MANDATORY"
+        "STATUS":"MANDATORY",
+        "WFS":"CADASTRALPARCELS.PARCELLAIRE_EXPRESS:feuille"
     },
     {
         "LAYER":"PARCELLE",
         "TABLE":"parcelle",
-        "STATUS":"MANDATORY"
+        "STATUS":"MANDATORY",
+        "WFS":"CADASTRALPARCELS.PARCELLAIRE_EXPRESS:parcelle"
     },
     {
         "LAYER":"LOCALISANT",
         "TABLE":"localisant",
-        "STATUS":"MANDATORY"
+        "STATUS":"MANDATORY",
+        "WFS":"CADASTRALPARCELS.PARCELLAIRE_EXPRESS:localisant"
     }
 ]

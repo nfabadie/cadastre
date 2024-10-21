@@ -1,11 +1,12 @@
 import json
 import subprocess
-from params import database_name, host, port, user, password, schema, target_crs
+from params import BASE, database_name, host, port, user, password, schema, target_crs
 
-ROOT = "E:/codes/cadastre/automated_version"
-ROOT_BDTOPO = "E:/codes/cadastre/data/BDTOPO_3-4_TOUSTHEMES_SHP_LAMB93_D094_2024-09-15/BDTOPO/1_DONNEES_LIVRAISON_2024-09-00147/BDT_3-4_SHP_LAMB93_D094-ED2024-09-15"
-ROOT_PCI = "E:/codes/cadastre/data/PARCELLAIRE-EXPRESS_1-1__SHP_LAMB93_D094_2024-07-01/PARCELLAIRE-EXPRESS/1_DONNEES_LIVRAISON_2024-07-00114/PEPCI_1-1_SHP_LAMB93_D094"
+ROOT = BASE + "/automated_version"
 
+#These paths have to be adaptated to your situation
+ROOT_BDTOPO = BASE + "/data/merged"
+ROOT_PCI = BASE + "/data/merged"
 
 # Construct the ogr2ogr command with Python variables
 def create_ogr2ogr_command(database_name, host, port, user, password, shapefile_path, target_table_name, target_crs):

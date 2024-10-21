@@ -1,9 +1,16 @@
+# README.md
+
+## Installation
 ### Pré-requis
 - QGIS (OSGeo4W installer)
 - Python
 
 ### Environnement virtuel Python
 * Testé avec Python 3.10.8
+```python
+python -m venv .venv_synthmaps
+#source .venv_synthmaps/bin/activate
+```
 
 ### ogr2ogr depuis le terminal de commandes Windows
 - Variables d'environnement à définir : 
@@ -35,8 +42,36 @@
 6. Utiliser ```subprocess``` pour utiliser cet interpréteur pour exécuter des scripts Python utilisant PyQGIS.
 
 ## Tutoriel "Création de dataset synthétique"
-**EN COURS DE REDACTION**
-### 1. Création de la base de données "cadastre" et du schéma "travail"
-1. Executer le script ```prepare_db.py``` pour créer la base de données *cadastre* et les schémas *travail* et *temporary*.
-    * TO DO : Adapter les paramètres de connexion à votre serveur postgres et à vos identifiants
-2. Executer ```1_load_layers```
+
+### 0. Création de la base de données
+1. Ouvrir le fichier ```params.py``` et l'adapter à votre situation.
+2. Créer une nouvelle base de données appelée *cadastre* dans Postgres.
+3. Créer un schéma *travail* et un schéma *temporary* 
+* Les deux dernières étapes peuvent être faites automatiquement avec le script ```0_prepare_db.py```.
+
+### 1. Téléchargement des données
+
+#### Cas général
+* Suivre le processus de téléchargement indiqué dans le README principal du dépôt.
+
+#### Alternative pour des couches géographiques **contenant peu d'objets**
+* Utiliser le script ```1_download_data.py``` pour télécharger des données par le biais du flux WFS de l'IGN :
+    * Paramétrez la variable ```wfs_layer_name``` en indiquant le nom de la couche WFS que vous qouhaitez télécharger.
+    * Les données seront sélectionnées par département (la liste des départements est fournie dans le fichier ```departements.json```)
+
+### 2. Aggréger les données de plusieurs départements (même couche)
+1. Créez un projet QGIS vide.
+2. Choisir une couche de la BDTOPO ou du PCI EXPRESS et charger le fichier correspondant de chaque département sélectionné (exemple : les couches ````PARCELLE.shp``` des départements 91,92,93,94,75,77,51)
+3. Ouvrir l'**interpréteur Python de QGIS**:
+    * Ouvrir le script ```2_concat_depts_data.py```.
+    * Adapter le nom de la couche résultat et le dossier ROOT du projet.
+    * Exécuter le script
+    * La couche aggrégée est stockée dans le dossier *data/merged/*.
+
+### 3. Ajouter les couches aggrégées à la base de données
+1. Ouvrir le script dans votre éditeur de code ```3_load_layers_into_db.py```
+2. Adapter les chemins de fichiers à votre situation
+4. Exécuter le script depis votre terminal: les couches décrites dans les fichiers *bdtopo.json* et *pci-expresss.json* seront chargée dans la base de données *cadastre*.
+
+### 4. Générer les coordonnées des zones (1 zone = 100 images)
+1. Créez un nouveau projet QGIS et ajouter les couches aggrégées obtenues à l'étape précédente. 

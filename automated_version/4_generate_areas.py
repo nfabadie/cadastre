@@ -12,19 +12,17 @@ from qgis.core import (
     QgsDataSourceUri
 )
 from qgis.PyQt.QtCore import QVariant
+from params import BASE, target_crs, grid_size, database_name, port, host, user, password
 
-# Parameters
-ROOT = "E:/codes/cadastre"
-STYLES_FOLDER = ROOT + "/styles"
+# Paths
+STYLES_FOLDER = BASE + "/styles"
+output_folder = BASE + "/outputs/areas"  # Folder where the shapefiles will be saved
+
+#Fix parameters
 N = 'ALL'  # Number of squares to randomly select, set to 'ALL' to select all squares
 dept = "94"  # Example department code
 style = "94_style1"  # Style to apply to the selected grid squares
-
-#Fix parameters
-grid_size = 6620  # Grid size (width and height in meters
 project_crs_code = 2154
-epsg_code = "EPSG:2154"
-output_folder = ROOT + "/outputs/areas"  # Folder where the shapefiles will be saved
 
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
@@ -48,7 +46,7 @@ QgsProject.instance().setCrs(QgsCoordinateReferenceSystem(project_crs_code))
 
 # Load layers from db to QGIS
 uri = QgsDataSourceUri()
-uri.setConnection("localhost", "5436", "cadastre", "postgres", "postgres")
+uri.setConnection(host, port, database_name, user, password)
 
 # Define the list of layers to load from Postgis database
 layers = [
@@ -82,7 +80,7 @@ xmin_feuille, ymin_feuille, xmax_feuille, ymax_feuille = (
 )
 
 # Create an empty memory layer for the grid
-grid_layer = QgsVectorLayer(f'Polygon?crs={epsg_code}', 'Grid Layer', 'memory')
+grid_layer = QgsVectorLayer(f'Polygon?crs={target_crs}', 'Grid Layer', 'memory')
 prov = grid_layer.dataProvider()
 
 # Add fields: 'insee_dept', 'area_id', 'style', 'xmin', 'ymin', 'xmax', 'ymax'
@@ -149,7 +147,7 @@ if N != 'ALL':
     random_selected_features = random.sample(selected_features, N)
 
     # Step 4: Create a new layer for the selected grid squares
-    selected_grid_layer = QgsVectorLayer(f'Polygon?crs={epsg_code}', 'Selected Grid Layer', 'memory')
+    selected_grid_layer = QgsVectorLayer(f'Polygon?crs={target_crs}', 'Selected Grid Layer', 'memory')
     prov_selected = selected_grid_layer.dataProvider()
     prov_selected.addAttributes(grid_layer.fields())
     selected_grid_layer.updateFields()
@@ -181,7 +179,7 @@ else:
     print("Shapefile loaded successfully")
 
 # Prepare to write CSV
-output_csv_path = ROOT + f"/automated_version/controls/{dept}_controls.csv"
+output_csv_path = BASE + f"/automated_version/controls/{dept}_controls.csv"
 
 # Get field names (attributes)
 fields = [field.name() for field in layer.fields()]

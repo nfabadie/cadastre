@@ -1,0 +1,37 @@
+[
+    {
+        "CODE":"94",
+        "NOM":"Val-de-Marne",
+        "IMPORTANCE":"Tout"
+    },
+    {
+        "CODE":"93",
+        "NOM":"Seine-Saint-Denis",
+        "IMPORTANCE":"Bordure"
+    },
+    {
+        "CODE":"92",
+        "NOM":"Hauts-de-Seine",
+        "IMPORTANCE":"Bordure"
+    },
+    {
+        "CODE":"91",
+        "NOM":"Essonne",
+        "IMPORTANCE":"Bordure"
+    },
+    {
+        "CODE":"75",
+        "NOM":"Paris",
+        "IMPORTANCE":"Bordure"
+    },
+    {
+        "CODE":"77",
+        "NOM":"Seine-et-Marne",
+        "IMPORTANCE":"Intérieur"
+    },
+    {
+        "CODE":"51",
+        "NOM":"Marne",
+        "IMPORTANCE":"Intérieur"
+    }
+]

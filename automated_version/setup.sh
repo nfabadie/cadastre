@@ -1,5 +1,6 @@
-#Create virtual env
-python -m venv .venv_synthmaps
-source .venv_synthmaps/bin/activate
+cd ..
+mkdir data
+mkdir outputs
+
 #Install libs
 pip install -r requirements.txt

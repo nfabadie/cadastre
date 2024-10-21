@@ -3,18 +3,21 @@
         "THEME":"HYDROGRAPHIE",
         "LAYER":"COURS_D_EAU",
         "TABLE":"coursdeau",
-        "STATUS":"MANDATORY"
+        "STATUS":"MANDATORY",
+        "WFS":"BDTOPO_V3:cours_d_eau"
     },
     {
         "THEME":"TRANSPORT",
         "LAYER":"TRONCON_DE_ROUTE",
         "TABLE":"tronconderoute",
-        "STATUS":"MANDATORY"
+        "STATUS":"MANDATORY",
+        "WFS":"BDTOPO_V3:troncon_de_route"
     },
     {
         "THEME":"HYDROGRAPHIE",
         "LAYER":"SURFACE_HYDROGRAPHIQUE",
         "TABLE":"surfacehydrographique",
-        "STATUS":"OPTIONAL"
+        "STATUS":"OPTIONAL",
+        "WFS":"BDTOPO_V3:surface_hydrographique"
     }
 ]
