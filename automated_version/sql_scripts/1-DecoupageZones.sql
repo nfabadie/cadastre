@@ -50,7 +50,8 @@ BEGIN
 			
 			-- Insertion des zones dans la table qui les stocke
 			INSERT INTO temporary.zone_name(id_zone, geom) VALUES (zone_name, zone_geom);
-			INSERT INTO public.zones_per_areas (id_zone, geom, id_area) VALUES (zone_name, zone_geom, identifiant_area_from_csv);
+            -- Insertion des zones dans une table qui sauvegarde l'emprise géographique des images de chaque grande zone (identifiant_area_from_csv est remplacé par l'identifiant de la zone à l'aide du code Python)
+			INSERT INTO public.zones_per_areas(id_zone, geom, id_area) VALUES (zone_name, zone_geom, identifiant_area_from_csv);
 
 				-- Création des schémas
 			EXECUTE 'DROP SCHEMA IF EXISTS '|| zone_name ||' CASCADE ;';
