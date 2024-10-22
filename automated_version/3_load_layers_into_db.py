@@ -35,7 +35,7 @@ if __name__ == "__main__":
         bdtopo = json.load(f)
 
     for elem in bdtopo:
-        shapefile_path = ROOT_BDTOPO + '/' + elem['THEME'] + '/' + elem['LAYER'] + '.shp'
+        shapefile_path = ROOT_BDTOPO + '/' + elem['TABLE'] + '.shp'
         table_name = elem['TABLE']
         target_table_name = schema + '.' + table_name
         command = create_ogr2ogr_command(database_name, host, port, user, password, shapefile_path, target_table_name, target_crs)
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         pci = json.load(f)
 
     for elem in pci:
-        shapefile_path = ROOT_PCI + '/' + elem['LAYER'] + '.shp'
+        shapefile_path = ROOT_PCI + '/' + elem['TABLE'] + '.shp'
         table_name = elem['TABLE']
         target_table_name = schema + '.' + table_name
         command = create_ogr2ogr_command(database_name, host, port, user, password, shapefile_path, target_table_name, target_crs)

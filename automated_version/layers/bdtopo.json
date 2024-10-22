@@ -12,12 +12,5 @@
         "TABLE":"tronconderoute",
         "STATUS":"MANDATORY",
         "WFS":"BDTOPO_V3:troncon_de_route"
-    },
-    {
-        "THEME":"HYDROGRAPHIE",
-        "LAYER":"SURFACE_HYDROGRAPHIQUE",
-        "TABLE":"surfacehydrographique",
-        "STATUS":"OPTIONAL",
-        "WFS":"BDTOPO_V3:surface_hydrographique"
     }
 ]

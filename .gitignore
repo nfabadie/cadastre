@@ -12,3 +12,6 @@ CartesSynthetiques_tmp.qgz
 .venv_synthmaps/
 .vscode/
 qgis/
+automated_version/controls/94_controls.csv
+automated_version/areas/
+automated_version/layers/memo.txt

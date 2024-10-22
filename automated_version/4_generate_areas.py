@@ -19,8 +19,7 @@ STYLES_FOLDER = BASE + "/styles"
 output_folder = BASE + "/outputs/areas"  # Folder where the shapefiles will be saved
 
 #Fix parameters
-N = 'ALL'  # Number of squares to randomly select, set to 'ALL' to select all squares
-dept = "94"  # Example department code
+N = 160  # Number of squares to randomly select, set to 'ALL' to select all squares
 style = "94_style1"  # Style to apply to the selected grid squares
 project_crs_code = 2154
 
@@ -85,7 +84,6 @@ prov = grid_layer.dataProvider()
 
 # Add fields: 'insee_dept', 'area_id', 'style', 'xmin', 'ymin', 'xmax', 'ymax'
 prov.addAttributes([
-    QgsField('insee_dept', QVariant.String),
     QgsField('area_id', QVariant.Int),
     QgsField('style', QVariant.String),
     QgsField('xmin', QVariant.Double),
@@ -110,7 +108,7 @@ for x in range(int(xmin_feuille), int(xmax_feuille), grid_size):
             # Create a new feature for each grid square
             feature = QgsFeature(grid_layer.fields())
             feature.setGeometry(geom)
-            feature.setAttributes([dept, unique_id, style, x, y, xmax, ymax])
+            feature.setAttributes([unique_id, style, x, y, xmax, ymax])
             features.append(feature)
             unique_id += 1
 
@@ -119,58 +117,52 @@ prov.addFeatures(features)
 grid_layer.updateExtents()
 
 # Save the full grid before selection
-full_grid_path = f"{output_folder}/{dept}_full_grid.shp"
+full_grid_path = f"{output_folder}/full_grid.shp"
 QgsVectorFileWriter.writeAsVectorFormat(grid_layer, full_grid_path, "UTF-8", grid_layer.crs(), "ESRI Shapefile")
 layer_full_grid = QgsVectorLayer(full_grid_path, "full_grid", "ogr")
 
 print(f"Full grid saved as {full_grid_path}")
 
-if N != 'ALL':
-    # Step 1: Build a spatial index for the "parcelle" layer for efficient spatial queries
-    parcelle_index = QgsSpatialIndex(parcelle_layer.getFeatures())
 
-    # Step 2: Select grid squares that intersect with "parcelle" features
-    selected_features = []
-    for grid_feat in grid_layer.getFeatures():
-        grid_geom = grid_feat.geometry()
-        # Use the spatial index to find "parcelle" features intersecting with the grid square
-        intersecting_parcelle_ids = parcelle_index.intersects(grid_geom.boundingBox())
-        
-        # Check if any of these features actually intersect the grid square
-        for parcelle_id in intersecting_parcelle_ids:
-            parcelle_feat = parcelle_layer.getFeature(parcelle_id)
-            if grid_geom.intersects(parcelle_feat.geometry()):
-                selected_features.append(grid_feat)
-                break  # Stop checking other "parcelle" features for this grid square
+# Step 1: Build a spatial index for the "parcelle" layer for efficient spatial queries
+parcelle_index = QgsSpatialIndex(parcelle_layer.getFeatures())
 
-    # Step 3: Randomly select N squares from the valid ones
-    random_selected_features = random.sample(selected_features, N)
+# Step 2: Select grid squares that intersect with "parcelle" features
+selected_features = []
+for grid_feat in grid_layer.getFeatures():
+    grid_geom = grid_feat.geometry()
+    # Use the spatial index to find "parcelle" features intersecting with the grid square
+    intersecting_parcelle_ids = parcelle_index.intersects(grid_geom.boundingBox())
+    
+    # Check if any of these features actually intersect the grid square
+    for parcelle_id in intersecting_parcelle_ids:
+        parcelle_feat = parcelle_layer.getFeature(parcelle_id)
+        if grid_geom.intersects(parcelle_feat.geometry()):
+            selected_features.append(grid_feat)
+            break  # Stop checking other "parcelle" features for this grid square
 
-    # Step 4: Create a new layer for the selected grid squares
-    selected_grid_layer = QgsVectorLayer(f'Polygon?crs={target_crs}', 'Selected Grid Layer', 'memory')
-    prov_selected = selected_grid_layer.dataProvider()
-    prov_selected.addAttributes(grid_layer.fields())
-    selected_grid_layer.updateFields()
+# Step 3: Randomly select N squares from the valid ones
+random_selected_features = random.sample(selected_features, N)
 
-    # Add selected features to the selected grid layer
-    prov_selected.addFeatures(random_selected_features)
-    selected_grid_layer.updateExtents()
+# Step 4: Create a new layer for the selected grid squares
+selected_grid_layer = QgsVectorLayer(f'Polygon?crs={target_crs}', 'Selected Grid Layer', 'memory')
+prov_selected = selected_grid_layer.dataProvider()
+prov_selected.addAttributes(grid_layer.fields())
+selected_grid_layer.updateFields()
 
-    # Step 5: Save the selected grid squares as a shapefile
-    selected_grid_path = f"{output_folder}/{dept}_selected_areas.shp"
-    QgsVectorFileWriter.writeAsVectorFormat(selected_grid_layer, selected_grid_path, "UTF-8", selected_grid_layer.crs(), "ESRI Shapefile")
-    print(f"Selected grid saved as {selected_grid_path}")
-    layer_selection_grid = QgsVectorLayer(selected_grid_path, "selected_grid", "ogr")
-    QgsProject.instance().addMapLayer(layer_selection_grid)
-else:
-    selected_grid_path = f"{output_folder}/{dept}_selected_areas.shp"
-    QgsVectorFileWriter.writeAsVectorFormat(grid_layer, selected_grid_path, "UTF-8", grid_layer.crs(), "ESRI Shapefile")
-    print(f"Selected grid saved as {selected_grid_path}")
-    layer_selection_grid = QgsVectorLayer(selected_grid_path, "selected_grid", "ogr")
-    QgsProject.instance().addMapLayer(grid_layer)
+# Add selected features to the selected grid layer
+prov_selected.addFeatures(random_selected_features)
+selected_grid_layer.updateExtents()
+
+# Step 5: Save the selected grid squares as a shapefile
+selected_grid_path = f"{output_folder}/selected_areas.shp"
+QgsVectorFileWriter.writeAsVectorFormat(selected_grid_layer, selected_grid_path, "UTF-8", selected_grid_layer.crs(), "ESRI Shapefile")
+print(f"Selected grid saved as {selected_grid_path}")
+layer_selection_grid = QgsVectorLayer(selected_grid_path, "selected_grid", "ogr")
+QgsProject.instance().addMapLayer(layer_selection_grid)
 
 # Load the shapefile
-shapefile_path = f"{output_folder}/{dept}_selected_areas.shp"
+shapefile_path = f"{output_folder}/selected_areas.shp"
 layer = QgsVectorLayer(shapefile_path, "selected_grid", "ogr")
 
 if not layer.isValid():
@@ -179,7 +171,7 @@ else:
     print("Shapefile loaded successfully")
 
 # Prepare to write CSV
-output_csv_path = BASE + f"/automated_version/controls/{dept}_controls.csv"
+output_csv_path = BASE + f"/automated_version/controls/controls.csv"
 
 # Get field names (attributes)
 fields = [field.name() for field in layer.fields()]

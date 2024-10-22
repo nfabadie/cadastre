@@ -2,7 +2,7 @@ import processing
 from qgis.core import QgsProject
 
 ROOT = "E:/codes/cadastre" #We don't use the params file because we execute this script in QGIS interpreter
-layer_name = "batiment" #!!! Layers name have to be the same as in the bdtopo.json and pci-express.json files
+layer_name = "tronconderoute" #!!! Layers name have to be the same as in the bdtopo.json and pci-express.json files
 
 # Step 1: Retrieve all vector layers in the project
 project = QgsProject.instance()

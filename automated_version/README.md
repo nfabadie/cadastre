@@ -61,7 +61,7 @@ python -m venv .venv_synthmaps
 
 ### 2. Aggréger les données de plusieurs départements (même couche)
 1. Créez un projet QGIS vide.
-2. Choisir une couche de la BDTOPO ou du PCI EXPRESS et charger le fichier correspondant de chaque département sélectionné (exemple : les couches ````PARCELLE.shp``` des départements 91,92,93,94,75,77,51)
+2. Choisir une couche de la BDTOPO ou du PCI EXPRESS et charger le fichier correspondant de chaque département sélectionné (exemple : les couches ```PARCELLE.shp``` des départements 91,92,93,94,75,77,51)
 3. Ouvrir l'**interpréteur Python de QGIS**:
     * Ouvrir le script ```2_concat_depts_data.py```.
     * Adapter le nom de la couche résultat et le dossier ROOT du projet.
