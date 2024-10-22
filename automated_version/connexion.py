@@ -1,10 +1,11 @@
 import psycopg2
+from params import database_name, host, port, user, password
 
 # Connect to the PostgreSQL database
 conn = psycopg2.connect(
-    dbname="cadastre",
-    user="postgres",
-    password="postgres",
-    host="localhost",
-    port="5436"
+    dbname=database_name,
+    user=user,
+    password=password,
+    host=host,
+    port=port
 )

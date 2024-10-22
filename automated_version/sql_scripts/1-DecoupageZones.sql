@@ -21,7 +21,6 @@ BEGIN
     max_x := min_x+ 6620; -- 662 metres * 10 
     max_y := min_y+ 6620; -- 662 metres * 10 
 	
-
     -- Création d'une table pour stocker le contour de la zone
     DROP TABLE IF EXISTS temporary.zone_name;
 	CREATE TABLE temporary.zone_name(id_zone character varying(10), geom geometry(POLYGON, 2154));
@@ -51,7 +50,8 @@ BEGIN
 			
 			-- Insertion des zones dans la table qui les stocke
 			INSERT INTO temporary.zone_name(id_zone, geom) VALUES (zone_name, zone_geom);
-			
+			INSERT INTO public.zones_per_areas (id_zone, geom, id_area) VALUES (zone_name, zone_geom, identifiant_area_from_csv);
+
 				-- Création des schémas
 			EXECUTE 'DROP SCHEMA IF EXISTS '|| zone_name ||' CASCADE ;';
 			EXECUTE 'CREATE SCHEMA IF NOT EXISTS '|| zone_name ||';';

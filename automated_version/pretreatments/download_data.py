@@ -18,7 +18,7 @@ with open(ROOT + '/automated_version/layers/departements.json') as f:
     dept_list = [x['CODE'] for x in dept]
 
 # Step 2: Define the WFS layer
-wfs_layer_name = "CADASTRALPARCELS.PARCELLAIRE_EXPRESS:batiment"
+wfs_layer_name = "CADASTRALPARCELS.PARCELLAIRE_EXPRESS:feuille"
 
 # Create the full WFS URL with the typeName (layer name)
 uri = f"{wfs_url}service=WFS&version=2.0.0&request=GetFeature&typeName={wfs_layer_name}&SRSNAME={crs_epsg}"

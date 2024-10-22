@@ -19,7 +19,7 @@ from qgis.core import (
 )
 from PyQt5.QtGui import QImage, QPainter, QColor
 from PyQt5.QtCore import Qt, QRectF, QSize
-
+from params import database_name, host, port, user, password
 QGIS_PATH = "C:/OSGeo4W/apps/qgis"
 
 ############## Export tiles part
@@ -33,16 +33,15 @@ OUTPUT_FOLDER_ROOT = ROOT + "/outputs"
 current_area = pd.read_csv(CODE_FOLDER + "/current_area.csv", sep=",")
 print(current_area)
 #Create the path to save the images
-insee_dept = current_area['insee_dept'].iloc[0]
 area_id = current_area['area_id'].iloc[0]
 style = current_area['style'].iloc[0]
 hex_color = current_area['background_color'].iloc[0]
-OUTPUT_FOLDER = OUTPUT_FOLDER_ROOT + "/dept_" + str(insee_dept) + "_" + str(area_id)
+OUTPUT_FOLDER = OUTPUT_FOLDER_ROOT + "/area_" + str(area_id)
 print(OUTPUT_FOLDER)
 
 # Define the connection parameters to PostGIS for QGIS project
 uri = QgsDataSourceUri()
-uri.setConnection("localhost", "5436", "cadastre", "postgres", "postgres")
+uri.setConnection(host, port, database_name, user, password)
 
 # Define the list of layers to load
 layers = [
@@ -50,7 +49,7 @@ layers = [
     {"schema": "travail", "table": "parcelle", "geom_name":"geom", "key": "id"},
     {"schema": "travail", "table": "batiment", "geom_name":"geom", "key": "id"},
     {"schema": "travail", "table": "localisant", "geom_name":"bbox", "key": "id"},
-    {"schema": "travail", "table": "surfacehydrographique", "geom_name":"geom", "key": "id"},
+    #{"schema": "travail", "table": "surfacehydrographique", "geom_name":"geom", "key": "id"},
     {"schema": "travail", "table": "coursdeau", "geom_name":"geom", "key": "id"},
     {"schema": "temporary", "table": "zone_name", "geom_name":"geom", "key": "id"},
     {"schema": "travail", "table": "annotationriviere", "geom_name":"bbox", "key": "id"},

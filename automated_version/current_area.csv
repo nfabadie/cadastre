@@ -1,0 +1,2 @@
+WKT,area_id,style,step1_decalage_x,step1_decalage_y,xmax,ymax,background_color,background_opacity,step2_char_width,step2_text_height,step3_char_width,step3_text_height,step4_char_width,step4_text_height,step5_char_width,step5_text_height
+MULTIPOLYGON (((791869 6892565.791869 6899185.798489 6899185.798489 6892565.791869 6892565))),564,94_style1,791869.0,6892565.000000001,798489.0,6899185.0,#ded5bc,74,3,5,7,14,5,4.5,5.5,5

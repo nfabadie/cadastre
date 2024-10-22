@@ -27,8 +27,10 @@ def run_scripts(ROOT,CONTROLS,ANNOTATIONS_FOLDER,SKIP_STEPS=[]):
     # Configure the logging module
     logging.basicConfig(filename=ANNOTATIONS_FOLDER +'/log.txt', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+    #Load controls panel and styles panel
     controls = pd.read_csv(CONTROLS, delimiter=",") #One row is one area of 100 crops
     controls = controls.rename(columns={'xmin': 'step1_decalage_x', 'ymin': 'step1_decalage_y'}) #Rename x_min and y_min into step1_decalage_x et step1_decalage_y
+    controls = controls.head(2)
     styles = pd.read_csv(ROOT + "styles/styles.csv", delimiter=",")
     controls_csv = pd.merge(controls, styles, left_on='style', right_on='style', how='left')
     controls_csv = controls_csv.replace(',', '.', regex=True)
@@ -46,7 +48,7 @@ def run_scripts(ROOT,CONTROLS,ANNOTATIONS_FOLDER,SKIP_STEPS=[]):
     logging.info('Start treating areas')
     for index, row in controls_csv.iterrows():
         TOTAL_EXECUTION_TIME = 0
-        logging.info(f'Start treating area {row["area_id"]} of departement {row["insee_dept"]}')
+        logging.info(f'Start treating area {row["area_id"]}.')
 
         #Create a csv using only the current row and df header (it has to be formated as a csv)
         current_area = ROOT + 'automated_version/current_area.csv'
@@ -60,6 +62,7 @@ def run_scripts(ROOT,CONTROLS,ANNOTATIONS_FOLDER,SKIP_STEPS=[]):
         step = 'step1'
         if step not in SKIP_STEPS:
             variables = {col: row[col] for col in row.index if step in col}
+            variables["identifiant_area_from_csv"] = row['area_id']
             logging.info('Start STEP 1')
             start_time = time.time()
             executesql_with_string_format(SQL_SCRIPTS_FOLDER,SQL_SCRIPT_1,variables)
@@ -128,7 +131,7 @@ def run_scripts(ROOT,CONTROLS,ANNOTATIONS_FOLDER,SKIP_STEPS=[]):
 
         #STEP 7: Create annotation table
         step = 'step7'
-        annotations_tab_name = 'dept_' + str(row['insee_dept']) + '_' + str(row['area_id'])
+        annotations_tab_name = 'area_' + str(row['area_id'])
         if step not in SKIP_STEPS:
             variables = {'annotations_tab_name': annotations_tab_name}
             logging.info('Start STEP 7 (there is no STEP 6 :) : Creating annotations table')
@@ -179,7 +182,7 @@ def run_scripts(ROOT,CONTROLS,ANNOTATIONS_FOLDER,SKIP_STEPS=[]):
         else:
             logging.info('Skip Export annotations table in csv')
 
-        logging.info(f'Execution time for {row["area_id"]} of departement {row["insee_dept"]}: ' + str(TOTAL_EXECUTION_TIME))
+        logging.info(f'Execution time for {row["area_id"]}: ' + str(TOTAL_EXECUTION_TIME))
     
     logging.info('Dataset have been created !')
     conn.close()
@@ -188,7 +191,7 @@ if __name__ == "__main__":
     
     ############## Create annotation table part
     ROOT = "E:/codes/cadastre/"
-    CONTROLS = ROOT + "automated_version/controls/94_controls.csv"
+    CONTROLS = ROOT + "automated_version/controls/controls.csv"
     SQL_SCRIPTS_FOLDER = ROOT + "automated_version/sql_scripts/"
     ANNOTATIONS_FOLDER = ROOT + "outputs/"
     FIRST_RUN_EVER = True #Is it the first time that the database is used ?
