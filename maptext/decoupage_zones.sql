@@ -15,7 +15,7 @@ DECLARE
 
 BEGIN
 	-- On crée une table qui contient une seule ligne avec la surface couverte par l'ensemble des feuilles
-	CREATE TABLE temporary.surfcadastre AS SELECT st_union(travail.feuille.geom) geom FROM travail.feuille;
+	CREATE TABLE temporary.surfcadastre AS SELECT st_union(feuille.geom) geom FROM feuille;
 	CREATE INDEX idx_sc ON temporary.surfcadastre USING GIST (geom);
     -- Coordonnées limites de la zone cadastrée:
     min_x := (SELECT ST_XMIN(geom) FROM temporary.surfcadastre);
@@ -69,5 +69,13 @@ BEGIN
 	CREATE TABLE temporary.zones AS 
 	SELECT temporary.zone_name.id_zone as id_zone, ST_Intersection(temporary.zone_name.geom, surfcadastre.geom) AS geom FROM temporary.zone_name, temporary.surfcadastre WHERE ST_Intersects(temporary.zone_name.geom, surfcadastre.geom);
 	DELETE FROM temporary.zones WHERE (ST_Area(geom)< 438244) ;
+	ALTER TABLE temporary.zones ADD COLUMN loc_name geometry (POINT,2154);
+	ALTER TABLE temporary.zones ADD COLUMN map_name character varying(100);
+	UPDATE temporary.zones SET loc_name = ST_PointOnSurface(geom);
+	UPDATE temporary.zones SET map_name = (SELECT feuille.nom_com FROM feuille WHERE ST_Within(temporary.zones.geom, feuille.geom));
+	
+	-- On prépare aussi les données sur les numéros de parcelles
+	ALTER TABLE localisant ADD COLUMN numero_court text;
+	UPDATE localisant SET numero_court = regexp_replace(numero, '(0*)([0-9]*)', '\2');
 	
 END $$;
